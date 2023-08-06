@@ -1,15 +1,21 @@
 package main
 
 import (
-	"io"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"video/controller"
 )
 
-func home(w http.ResponseWriter,r *http.Request)  {
-	io.WriteString(w,"<h1>hello world")
+func RegisterHandles() *httprouter.Router {
+	router := httprouter.New()
+	router.POST("/api/v1/user", controller.CreateUser)
+	router.POST("/api/v1/user/:username", controller.CreateUserName)
+	return router
 }
 
 func main() {
-	http.HandleFunc("/",home)
-	http.ListenAndServe(":8000",nil)
+
+	r := RegisterHandles()
+
+	http.ListenAndServe(":8000", r)
 }
